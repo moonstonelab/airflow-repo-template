@@ -6,29 +6,27 @@ PIP = pip
 VENV = .venv
 SRC_DIR = src
 TEST_DIR = tests
+CUSTOM_IMAGE_NAME = my-airflow
+AIRFLOW_VERSION=2.9.3
 
-dev_dep:
+dev_dep: $(VENV)/bin/activate
 	$(PIP) install -r requirements-dev.txt
 
 dep_sync: dev_dep
+	@pip install --upgrade pip
 	@pip-compile --output-file requirements.txt
-	@pip-sync requirements.txt requirements-dev.txt
+	@pip-sync requirements.txt
 
-# Virtual environment
-$(VENV)/bin/activate: requirements.txt
-	$(PYTHON) -m venv $(VENV)
-	$(VENV)/bin/pip install -r requirements.txt
+requirements.txt: dep_sync
+	@echo "Created requirements.txt..."
 
-# Install dependencies
-install: $(VENV)/bin/activate
+dev_build: Dockerfile requirements.txt
+	@echo "Building docker image..."
+	docker build --build-arg AIRFLOW_VERSION=$(AIRFLOW_VERSION) -t $(CUSTOM_IMAGE_NAME) .
 
-# Run tests
-test: install
-	$(VENV)/bin/pytest $(TEST_DIR)
 
-# Run the main application
-run: install
-	$(VENV)/bin/python $(SRC_DIR)/main.py
+test:
+	$(PYTHON) -m pytest $(TEST_DIR)
 
 # Clean up
 clean:
@@ -37,11 +35,12 @@ clean:
 	find . -type d -name '__pycache__' -delete
 
 # Lint the code
-lint: install
+lint: dev_dep
 	$(VENV)/bin/flake8 $(SRC_DIR) $(TEST_DIR)
 
 # Format the code
-format: install
+format: dev_dep
 	$(VENV)/bin/black $(SRC_DIR) $(TEST_DIR)
 
-.PHONY: install test run clean lint format
+.PHONY: dep_sync test run clean lint format
+
