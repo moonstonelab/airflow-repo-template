@@ -1,0 +1,4 @@
+[project]
+name = "my-airflow-project"
+version = "0.0.1"
+dependencies = ["apache-airflow==2.9.3"]

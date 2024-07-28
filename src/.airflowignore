@@ -1,0 +1,2 @@
+my_company/common_package/.*
+my_company/my_custom_dags/base_dag\.py
