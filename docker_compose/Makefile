@@ -10,7 +10,7 @@ docker_compose_config:
 
 up:
 	@chmod +x ./docker_compose_up.sh
-	@./docker_compose_up.sh "$(CUSTOM_IMAGE_NAME):latest"
+	@./docker_compose_up.sh "$(CUSTOM_IMAGE_NAME):latest" 50000
 
 down:
 	@docker compose down

@@ -22,6 +22,7 @@ requirements.txt: dep_sync
 
 dev_build: Dockerfile requirements.txt
 	@echo "Building docker image..."
+	docker rmi $(CUSTOM_IMAGE_NAME) || true
 	docker build --build-arg AIRFLOW_VERSION=$(AIRFLOW_VERSION) -t $(CUSTOM_IMAGE_NAME) .
 
 
