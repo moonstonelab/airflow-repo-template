@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 'my-airflow-release-airflow-variables'
+data:
+  # Update values for the development environment
+  only_dev: "5555"

@@ -1,0 +1,15 @@
+# helm/dev/values.yaml
+
+# Images
+images:
+  airflow:
+    repository: ${IMAGE_NAME}
+    tag: ${VERSION}
+
+env:
+  - name: AIRFLOW__CORE__ENVIRONMENT
+    value: dev
+
+extraEnvFrom: |
+  - configMapRef:
+      name: '{{ .Release.Name}}-airflow-variables'
